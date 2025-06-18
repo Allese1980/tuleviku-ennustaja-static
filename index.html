@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tuleviku Ennustaja</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; max-width: 400px; margin: auto; }
+    label, input, button, select { display: block; width: 100%; margin: .5rem 0; }
+    #kuul { width: 100px; margin: 1rem auto; display: block; }
+    #tulemus { background: #f0f0f0; padding: 1rem; margin-top: 1rem; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Tuleviku Ennustaja 🔮</h1>
+  <label>Nimi:<input id="nimi" required></label>
+  <label>Sünnikuupäev:<input id="kuupaev" type="date" required></label>
+  <label>Keel:
+    <select id="keel">
+      <option value="et">Eesti</option>
+      <option value="en">English</option>
+      <option value="ru">Русский</option>
+    </select>
+  </label>
+  <button id="ennusta">Ennusta</button>
+  <img id="kuul" src="https://i.imgur.com/8K3R1nX.png" alt="Kristallkuul">
+  <div id="tulemus"></div>
+
+  <script>
+    const zodiak = [
+      {m:"Kaljukits", d:20}, {m:"Veevalaja", d:19}, {m:"Kalad", d:21},
+      {m:"Jäär", d:21}, {m:"Sõnn", d:21}, {m:"Kaksikud", d:21},
+      {m:"Vähk", d:23}, {m:"Lõvi", d:23}, {m:"Neitsi", d:23},
+      {m:"Kaalud", d:23}, {m:"Skorpion", d:23}, {m:"Ambur", d:22}
+    ];
+    function getSign(d){
+      let dd=d.getDate(), mm=d.getMonth();
+      let idx = (dd < zodiak[mm].d) ? mm - 1 : mm;
+      if(idx<0) idx=11; return zodiak[idx].m;
+    }
+    function randomProphecy(sign){
+      const base = {
+        Kaljukits:"Täna avaneb tööalane võimalus.",
+        Veevalaja:"Sõber toob rõõmu.",
+        Kalad:"Intuitioon on täna tugev.",
+        Jäär:"Ole ettevaatlik finantsides.",
+        Sõnn:"Lase end viia uutesse maastikesse.",
+        Kaksikud:"Suhelda on hea aeg.",
+        Vähk:"Kodu-energia toetab sind.",
+        Lõvi:"Särad kui kuldne päike.",
+        Neitsi:"Korralda oma mõtted selgeks.",
+        Kaalud:"Leia tasakaal südames.",
+        Skorpion:"Sügavad tunded võimust võtmas.",
+        Ambur:"Reis viib sind avastusteni."
+      };
+      return base[sign] || "Tulevik on sinu teha!";
+    }
+    document.getElementById("ennusta").onclick = e=>{
+      e.preventDefault();
+      const n = document.getElementById("nimi").value.trim();
+      const d = new Date(document.getElementById("kuupaev").value);
+      if(!n||isNaN(d)) return alert("Sisesta nimi ja kuupäev");
+      const sign = getSign(d);
+      let p = randomProphecy(sign);
+      const t = document.getElementById("keel").value;
+      const maps = {
+        en:`Hello ${n}! As a ${sign} your day: ${p}`,
+        ru:`Привет ${n}! Как ${sign} тебя ждет: ${p}`,
+        et:`Tere ${n}! Sinu sodiaagimärk on ${sign}. ${p}`
+      };
+      document.getElementById("tulemus").textContent = maps[t];
+    };
+  </script>
+</body>
+</html>
